@@ -15,7 +15,7 @@ if (MSVC)
 else ()
   target_compile_options(simple-cpp-xml-compiler_options INTERFACE -Wall -Wextra -Wpedantic)
   if (SIMPLE_CPP_XML_WARNINGS_AS_ERRORS)
-    target_compiler_options(simple-cpp-xml-compiler_options INTERFACE -Werror)
+    target_compile_options(simple-cpp-xml-compiler_options INTERFACE -Werror)
   endif ()
 endif ()
 
