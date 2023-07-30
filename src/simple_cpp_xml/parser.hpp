@@ -14,6 +14,8 @@ class Parser
 {
 public:
   virtual ~Parser() = default;
+  void parse(const std::string_view &xml);
+
 protected:
   virtual void on_start()
   {}
@@ -27,8 +29,6 @@ protected:
   {}
   virtual void on_end()
   {}
-public:
-  void parse(const std::string_view &xml);
 };
 
 } // namespace simple_cpp::xml

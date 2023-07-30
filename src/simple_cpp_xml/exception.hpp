@@ -8,10 +8,11 @@ namespace simple_cpp::xml {
 class ParseError : public std::exception
 {
   std::string message;
+
 public:
   explicit ParseError(const std::string &details);
   const char *what() const noexcept override;
 };
-} // namespace simple_cpp_xml::xml
+} // namespace simple_cpp::xml
 
 #endif // SIMPLE_CPP_XML_EXCEPTION_HPP
