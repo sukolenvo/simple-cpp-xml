@@ -64,25 +64,25 @@ on_character_data: John Ronald Reuel Tolkien
 
 ## Cmake integration
 
-### Git submodule
-Checkout project as a Git submodule, then update `CMakeLists.txt`:
-```cmake
-add_subdirectory(vendor/simple-cpp-xml)
-
-target_link_libraries(target simple-cpp-xml::lib) 
-```
-
-### FetchContent
+### FetchContent(recommended)
 ```cmake
 include(FetchContent)
 
 FetchContent_Declare(
     simple-cpp-base64
     GIT_REPOSITORY https://github.com/sukolenvo/simple-cpp-xml.git
-    GIT_TAG        v0.1
+    GIT_TAG        v0.2
 )
 
 FetchContent_MakeAvailable(simple-cpp-xml)
+
+target_link_libraries(target simple-cpp-xml::lib) 
+```
+
+### Git submodule
+Checkout project as a Git submodule, then update `CMakeLists.txt`:
+```cmake
+add_subdirectory(vendor/simple-cpp-xml)
 
 target_link_libraries(target simple-cpp-xml::lib) 
 ```
