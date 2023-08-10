@@ -23,7 +23,14 @@ add_subdirectory(src)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
   enable_testing()
-  add_subdirectory(vendor/Catch2)
+  include(FetchContent)
+  FetchContent_Declare(
+      Catch2
+      GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+      GIT_TAG v3.4.0
+      GIT_SHALLOW TRUE
+  )
+  FetchContent_MakeAvailable(Catch2)
   add_subdirectory(test)
   include(CTest)
 endif ()
