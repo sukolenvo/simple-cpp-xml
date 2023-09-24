@@ -140,3 +140,17 @@ TEST_CASE("jacocoTestReport")
       parser.tagStart.begin(), parser.tagStart.end(), "/report/counter/ type=INSTRUCTION missed=4026 covered=16506")
     != parser.tagStart.end());
 }
+
+TEST_CASE("coberturaTestReport")
+{
+  const std::string testXml = readTestXml("coberturaTestReport");
+  TestParser parser;
+  parser.parse(testXml);
+  REQUIRE(parser.charData == std::vector<std::string>{ "../" });
+  REQUIRE(
+    std::find(parser.tagStart.begin(),
+      parser.tagStart.end(),
+      "/coverage/ line-rate=1.0 branch-rate=0.875 lines-covered=42 "
+      "lines-valid=42 branches-covered=28 branches-valid=32 complexity=0.0 timestamp=1695511040 version=gcovr 5.0")
+    != parser.tagStart.end());
+}
