@@ -1,0 +1,16 @@
+name: Coverage Notes
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+jobs:
+  coverage-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update PR
+        uses: sukolenvo/coverage-notes-action@v0.2.1
+        continue-on-error: true
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,64 @@
+name: Linux
+on:
+  release:
+    types: [ published ]
+  push:
+    paths-ignore:
+      - '.github/workflows/macos.yml'
+      - '.github/workflows/windows.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: verify format
+        run: make clang-format-check
+  unix:
+    needs: lint
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type:
+          - Debug
+          - Release
+        compiler:
+          - cpp: g++-12
+            c: gcc-12
+            gcovExecutable: gcov-12
+        include:
+          - build-type: Debug
+            compiler:
+              cpp: clang++-14
+              c: clang-14
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure CMake
+        run: >
+          cmake -S . -B ./build
+          -DCMAKE_BUILD_TYPE:STRING=${{matrix.build-type}}
+          -DSIMPLE_CPP_XML_WARNINGS_AS_ERRORS:BOOL=ON
+          -DOPT_ENABLE_COVERAGE:BOOL=${{ matrix.compiler.gcovExecutable != '' && matrix.build-type == 'Debug' }}
+        env:
+          CC: ${{matrix.compiler.c}}
+          CXX: ${{matrix.compiler.cpp}}
+      - name: Build
+        run: cmake --build ./build -- -j 2
+      - name: Test and coverage
+        working-directory: ./build
+        run: ctest . --output-on-failure
+      - name: coverage
+        working-directory: ./build
+        if: ${{ matrix.compiler.gcovExecutable != '' && matrix.build-type == 'Debug' }}
+        run: |
+          sudo apt-get install -y gcovr
+          gcovr -r ../ -s --gcov-executable ${{ matrix.compiler.gcovExecutable }} -f ../src --xml coverage.xml
+      - name: coverage-note
+        uses: sukolenvo/coverage-notes-action@0.4
+        if: ${{ matrix.compiler.gcovExecutable != '' && matrix.build-type == 'Debug' }}
+        continue-on-error: true
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          cobertura: build/coverage.xml
