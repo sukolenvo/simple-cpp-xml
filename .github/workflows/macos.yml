@@ -1,0 +1,48 @@
+name: MacOS
+on:
+  release:
+    types: [published]
+  push:
+    paths-ignore:
+      - '.github/workflows/linux.yml'
+      - '.github/workflows/windows.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: verify format
+        run: make clang-format-check
+  unix:
+    needs: lint
+    runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type:
+          - Debug
+          - Release
+        compiler:
+          - cpp: clang++
+            c: clang
+        include:
+          - build-type: Debug
+            compiler:
+              cpp: g++-12
+              c: gcc-12
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure CMake
+        run: >
+          cmake -S . -B ./build
+          -DCMAKE_BUILD_TYPE:STRING=${{matrix.build-type}}
+          -DSIMPLE_CPP_XML_WARNINGS_AS_ERRORS:BOOL=ON
+        env:
+          CC: ${{matrix.compiler.c}}
+          CXX: ${{matrix.compiler.cpp}}
+      - name: Build
+        run: cmake --build ./build -- -j 2
+      - name: Test
+        working-directory: ./build
+        run: ctest . --output-on-failure
