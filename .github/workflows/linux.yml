@@ -56,7 +56,7 @@ jobs:
           sudo apt-get install -y gcovr
           gcovr -r ../ -s --gcov-executable ${{ matrix.compiler.gcovExecutable }} -f ../src --xml coverage.xml
       - name: coverage-note
-        uses: sukolenvo/coverage-notes-action@v0.4
+        uses: sukolenvo/coverage-notes-action@v0.4.3
         if: ${{ matrix.compiler.gcovExecutable != '' && matrix.build-type == 'Debug' }}
         continue-on-error: true
         with:

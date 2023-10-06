@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Update PR
-        uses: sukolenvo/coverage-notes-action@v0.2.1
+        uses: sukolenvo/coverage-notes-action@v0.4.3
         continue-on-error: true
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
