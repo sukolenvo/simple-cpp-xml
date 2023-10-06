@@ -62,3 +62,4 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           cobertura: build/coverage.xml
+          parser_version: 0.4.2
