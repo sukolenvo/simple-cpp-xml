@@ -35,6 +35,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        # https://github.com/actions/runner-images/issues/8659
+      - uses: mjp41/workaround8649@c8550b715ccdc17f89c8d5c28d7a48eeff9c94a8
+        if: ${{ matrix.compiler.cpp == 'clang++-14' }}
+        with:
+          os: ubuntu-22.04
       - name: Configure CMake
         run: >
           cmake -S . -B ./build

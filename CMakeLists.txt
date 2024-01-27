@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(simple-cpp-xml VERSION 0.2)
+project(simple-cpp-xml VERSION 0.3)
 
 cmake_policy(SET CMP0048 NEW)
 
