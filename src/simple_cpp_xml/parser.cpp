@@ -143,6 +143,17 @@ bool iequals(const std::string &first, const std::string &second)
   return true;
 }
 
+void read_BOM_if_any(simple_cpp::xml::Reader &reader)
+{
+  const auto prefix = reader.peek(3);
+  if (prefix.size() == 3 && (prefix[0] & 0xFF) == 0b1110'1111 && (prefix[1] & 0xFF) == 0b1011'1011
+      && (prefix[2] & 0xFF) == 0b1011'1111) {
+    reader.read();
+    reader.read();
+    reader.read();
+  }
+}
+
 void read_xml_declaration_if_any(simple_cpp::xml::Reader &reader)
 {
   skip_white_spaces(reader);
@@ -191,6 +202,7 @@ void simple_cpp::xml::Parser::parse(const std::string_view &xml)
   simple_cpp::xml::StringReader reader(xml);
   try {
     on_start();
+    read_BOM_if_any(reader);
     read_xml_declaration_if_any(reader);
     read_doctype_if_any(reader);
     skip_white_spaces(reader);

@@ -155,3 +155,11 @@ TEST_CASE("coberturaTestReport")
       "lines-valid=42 branches-covered=28 branches-valid=32 complexity=0.0 timestamp=1695511040 version=gcovr 5.0")
     != parser.tagStart.end());
 }
+
+TEST_CASE("with_bom")
+{
+  const std::string testXml = readTestXml("with_bom");
+  TestParser parser;
+  parser.parse(testXml);
+  REQUIRE(parser.tagStart == std::vector{ std::string("/IRMG/") });
+}
